@@ -3,7 +3,7 @@
 require_relative "lib/openai/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "openai"
+  spec.name = "eh-openai"
   spec.version = OpenAI::VERSION
   spec.authors = ["Linh Le"]
   spec.email = ["linh.le@employmenthero.com"]
