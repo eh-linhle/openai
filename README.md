@@ -25,21 +25,21 @@ First, obtain an API key from https://platform.openai.com/api-keys.
 ```ruby
 require "openai"
 
-client = OpenAI::AssistantClient.new(apiKey = 'API_KEY')
+client = OpenAI::Client.new('API_KEY')
 
 # Get list assistants
-client.get_list_assistants
-client.get_list_assistants(limit = 2, order = SortOrder::ASC)
+client.assistant.get_list_assistants
+client.assistant.get_list_assistants(limit = 2, order = SortOrder::ASC)
 
 # Get assistant details by assistant id
-client.get_assistant_by_id('asst_NUocaU9L32vGuCEPwXdzA17Ya')
+client.assistant.get_assistant_by_id('asst_NUocaU9L32vGuCEPwXdzA17Ya')
 
 # Get assistant run status of thread id and run id
-client.get_run_status_by_thead_id_and_run_id(thread_id = 'thread_r0UdZWKXGMAyLfGOAIYbHNka', run_id = 'step_44RuaZU4oe8naEUwC2mK7gGf')
+client.run.get_run_status_by_thead_id_and_run_id(thread_id = 'thread_r0UdZWKXGMAyLfGOAIYbHNka', run_id = 'run_uheZalMazaLlhEf7chaEgKNB')
 
 # Get list thread message by thread id
-client.get_list_messages_by_thread_id(thread_id = 'thread_r0UdZWKXGMAyLfGOAIYbHNka')
-client.get_list_messages_by_thread_id(thread_id = 'thread_r0UdZWKXGMAyLfGOAIYbHNka', limit = 2, order = SortOrder::ASC)
+client.message.get_list_messages_by_thread_id(thread_id = 'thread_r0UdZWKXGMAyLfGOAIYbHNka')
+client.message.get_list_messages_by_thread_id(thread_id = 'thread_r0UdZWKXGMAyLfGOAIYbHNka', limit = 2, order = SortOrder::ASC)
 ```
 
 ## License
