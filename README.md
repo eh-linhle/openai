@@ -39,7 +39,7 @@ client.run.get_run_status_by_thead_id_and_run_id(thread_id = 'thread_r0UdZWKXGMA
 
 # Get list thread message by thread id
 client.message.get_list_messages_by_thread_id(thread_id = 'thread_r0UdZWKXGMAyLfGOAIYbHNka')
-client.message.get_list_messages_by_thread_id(thread_id = 'thread_r0UdZWKXGMAyLfGOAIYbHNka', limit = 2, order = SortOrder::ASC)
+client.message.get_list_messages_by_thread_id(thread_id = 'thread_r0UdZWKXGMAyLfGOAIYbHNka', limit = 2, order = QueryParams::SortOrder::DESC)
 ```
 
 ## License
