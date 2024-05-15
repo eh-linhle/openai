@@ -1,0 +1,73 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.openai.com/v1/assistants?limit=invalidLimitParam&order=asc
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <OPENAI_API_KEY>
+      Openai-Beta:
+      - assistants=v2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - api.openai.com
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Wed, 15 May 2024 10:40:52 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '239'
+      Connection:
+      - keep-alive
+      Openai-Version:
+      - '2020-10-01'
+      Openai-Organization:
+      - employment-hero-development
+      X-Request-Id:
+      - req_ffe9645eac2dacb14824691233ece22a
+      Openai-Processing-Ms:
+      - '6'
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=hcLmS0EDsZrlPXiK4jav9zR2gpOfN77UKyOq2poYkHI-1715769652-1.0.1.1-EwBnOSgFoHjJk1FHkqHONTHDEaTC_idSoFxRdKIoW6coYsrVF_HhlZqFqCt93vYCm6uaDkB.i4cKUewD4Y4I7Q;
+        path=/; expires=Wed, 15-May-24 11:10:52 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=9wTn2lhDzOBsbf0MbRZg3CJu0.h0cwNaTDof5W.zxq8-1715769652083-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 884283242fe25ddb-HKG
+      Alt-Svc:
+      - h3=":443"; ma=86400
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "error": {
+            "message": "Invalid type for 'limit': expected an integer, but got a string value that could not be converted into an integer.",
+            "type": "invalid_request_error",
+            "param": "limit",
+            "code": "invalid_type"
+          }
+        }
+  recorded_at: Wed, 15 May 2024 10:40:52 GMT
+recorded_with: VCR 6.1.0

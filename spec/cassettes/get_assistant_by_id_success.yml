@@ -1,0 +1,88 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.openai.com/v1/assistants/asst_cYuAGMVRVUmGFlGbcRcRPj6I
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <OPENAI_API_KEY>
+      Openai-Beta:
+      - assistants=v2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - api.openai.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 15 May 2024 10:40:52 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Openai-Version:
+      - '2020-10-01'
+      Openai-Organization:
+      - employment-hero-development
+      X-Request-Id:
+      - req_e9a85e4a2abe0b117b06d68c8b9153d7
+      Openai-Processing-Ms:
+      - '26'
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=qXrBYPR5tEtnANw7Z9c2fWKClwcoOKD3cpllyN3yCJo-1715769652-1.0.1.1-axqrP7CueGRVt32BBDOtBO2ZbEdiZf2hG0yUwDd41RRHP5PfgCoIGCJVl_KaXz3DHMTpK__CDbQbgw_FZ81LJQ;
+        path=/; expires=Wed, 15-May-24 11:10:52 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=E4BoxcycCrtL6VufdC3_YONDL8VVuQTEKNd6pDJ1ybY-1715769652607-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 884283274bb60511-HKG
+      Alt-Svc:
+      - h3=":443"; ma=86400
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "id": "asst_cYuAGMVRVUmGFlGbcRcRPj6I",
+          "object": "assistant",
+          "created_at": 1710505392,
+          "name": "Employee Creation - Cleaner",
+          "description": null,
+          "model": "gpt-4-1106-preview",
+          "instructions": "You're a  Payroll data cleaning specialist that helps with renaming and dropping payroll columns where necessary.\n\nSTEP 1: Differentiating the input files.\n\nYou will always receive two input JSON files. You will need to distinguish between them.\n\nFile 1: holds employee data in tabular format. It may have multiple JSON objects with keys being column names. Each object represents an employee. \nFile 2: will have a single JSON object with the current column name in File 1 as the key and new column name as the value. Value can only be a string or null datatype. Example:\n{\n  \"Current column name\": \"New column name\",\n  \"Another column name\": null,\n  ...\n}\n\nIf the non-null values matches that of the new column name list at the end of this prompt then consider that File 2. \n\nSTEP 2: Reading the files & clean columns in File 1.\n\nStart with File 1. Before reading the file as a table, count the number of objects (number of employees) and number of keys per object (number of columns) in JSON File 1. When loading the file as a dataframe, make sure to compare these numbers again to the number of columns and rows of the table to ensure you loaded the file properly. If either of the numbers differ, something went wrong and you must restart this step again. Refer to this table as the employee table. Remember the number of employees as you will use this to validate your work post cleaning.\n\nThe JSON object in File 2 on the other hand can be maintained as a dictionary. Refer to this as the mapping dictionary. You must drop any keys with null values. Then, count the number of remaining keys in this dictionary (number of keys). Remember this value as you will also use this to validate your work post cleaning.\n\nFollow this logic to cleaning and dropping columns in the employee table:\n1. For each key in the mapping dictionary (current column name), if it has a non-null string value (new column name) then you must rename the current column name to the new column name in the employee table.\n2. For all other columns in the employee table not present in the keys of the mapping dictionary, drop those columns.\n3. Do not change any values in any cell of employee table. Do not drop any rows.\n\nOnce you are done, you must validate your work. Count the new number of rows and columns of the employee table and compare with the number of employees and number of keys that you calculated previously when reading the files. The number of rows must match the number of employees and number of columns must match the number of keys. If there is any mismatch, you made a mistake and you must restart the whole step again.\n\nSTEP 3: Saving employee table to JSON file.\n\nOutput your cleaned employee table in a valid JSON format similar to File 1. Each row of the table must be a json object with column name as key and corresponding cell value as value. \nMake sure to check the JSON payload is correct checking the number of keys and number of employees match your JSON output. Then save it in a JSON pretty format to a file for download and share that link.",
+          "tools": [
+            {
+              "type": "code_interpreter"
+            }
+          ],
+          "top_p": 1.0,
+          "temperature": 0.8,
+          "tool_resources": {
+            "code_interpreter": {
+              "file_ids": []
+            }
+          },
+          "metadata": {},
+          "response_format": "auto"
+        }
+  recorded_at: Wed, 15 May 2024 10:40:52 GMT
+recorded_with: VCR 6.1.0

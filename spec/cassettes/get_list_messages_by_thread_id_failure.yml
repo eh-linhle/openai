@@ -1,0 +1,73 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.openai.com/v1/threads/FAKE_THREAD_ID/messages?limit=20&order=desc
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <OPENAI_API_KEY>
+      Openai-Beta:
+      - assistants=v2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - api.openai.com
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Wed, 15 May 2024 10:52:17 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Openai-Version:
+      - '2020-10-01'
+      Openai-Organization:
+      - employment-hero-development
+      X-Request-Id:
+      - req_0f69f205ff95b6f3eee24ea19f32748f
+      Openai-Processing-Ms:
+      - '12'
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=izIta9OjjhXpRX8pvxUEkH4sAJDTPQbeKgA6oQNhKCw-1715770337-1.0.1.1-27m012tXxGoQIN3nG5iPOqhVjRE2Sza8RHE9WEAQQ1bgZ0RndpHRGKOGL14tSXSLzFDyPUW5BUpdgjlH43fD7A;
+        path=/; expires=Wed, 15-May-24 11:22:17 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=kVVrBLFUxU2PLJoFrbln8qobLyS25WFk8Vgm88G9yZw-1715770337134-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 884293dd98c18617-HKG
+      Alt-Svc:
+      - h3=":443"; ma=86400
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "error": {
+            "message": "No thread found with id 'FAKE_THREAD_ID'.",
+            "type": "invalid_request_error",
+            "param": null,
+            "code": null
+          }
+        }
+  recorded_at: Wed, 15 May 2024 10:52:17 GMT
+recorded_with: VCR 6.1.0

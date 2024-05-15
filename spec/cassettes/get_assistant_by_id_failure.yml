@@ -1,0 +1,73 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.openai.com/v1/assistants/FAKE_ASSISTANT_ID
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <OPENAI_API_KEY>
+      Openai-Beta:
+      - assistants=v2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - api.openai.com
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Wed, 15 May 2024 10:40:53 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Openai-Version:
+      - '2020-10-01'
+      Openai-Organization:
+      - employment-hero-development
+      X-Request-Id:
+      - req_0130d3aab6a184b6e42de940ef64fafe
+      Openai-Processing-Ms:
+      - '15'
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=KYe1EnmZtPhvh4hZGqQs75aA8gd_yw3PUKlvrVoXlSE-1715769653-1.0.1.1-pHeYcSWVNr3bhFDkRNoRYTE2C8sDiqmvLuZFb2gOeGm67IHf9lWkDTL52yPgIPu7fftlE_oGgikCDOHFh797rw;
+        path=/; expires=Wed, 15-May-24 11:10:53 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=sQ1HAAefUN0S7jSTQbvTPmYI1CIwKJ9TFYlLb5nIO2A-1715769653011-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 88428329d90f8488-HKG
+      Alt-Svc:
+      - h3=":443"; ma=86400
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "error": {
+            "message": "No assistant found with id 'FAKE_ASSISTANT_ID'.",
+            "type": "invalid_request_error",
+            "param": null,
+            "code": null
+          }
+        }
+  recorded_at: Wed, 15 May 2024 10:40:52 GMT
+recorded_with: VCR 6.1.0

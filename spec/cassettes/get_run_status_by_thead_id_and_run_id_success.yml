@@ -1,0 +1,105 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.openai.com/v1/threads/thread_r0UdZWKXGMAyLfGOAIYbHNka/runs/run_uheZalMazaLlhEf7chaEgKNB
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <OPENAI_API_KEY>
+      Openai-Beta:
+      - assistants=v2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - api.openai.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 15 May 2024 10:45:35 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Openai-Version:
+      - '2020-10-01'
+      Openai-Organization:
+      - employment-hero-development
+      X-Request-Id:
+      - req_5988246933910891f977504db5c6f317
+      Openai-Processing-Ms:
+      - '77'
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=pTlOrYXqiGAIUk3oCa.bz5nqgttz5ri8Rw6N14yeXT4-1715769935-1.0.1.1-FvuBFZ4z5WmnWHwA62Q7FNLFEzz.UYiFyNaNyWgx2oDIH91_EvQxGZgqWVcmgbaCz.n6ccOJrxSGNXQReEohhQ;
+        path=/; expires=Wed, 15-May-24 11:15:35 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=Wan9TUcevYaKOAVlFj42XUj3twQMBN4p5kyFJAad3gc-1715769935302-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 88428a0dda0b0eb6-HKG
+      Alt-Svc:
+      - h3=":443"; ma=86400
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "id": "run_uheZalMazaLlhEf7chaEgKNB",
+          "object": "thread.run",
+          "created_at": 1715673958,
+          "assistant_id": "asst_672dSO130Ls4j6ATDnTazccU",
+          "thread_id": "thread_r0UdZWKXGMAyLfGOAIYbHNka",
+          "status": "completed",
+          "started_at": 1715673959,
+          "expires_at": null,
+          "cancelled_at": null,
+          "failed_at": null,
+          "completed_at": 1715673962,
+          "required_action": null,
+          "last_error": null,
+          "model": "gpt-4o",
+          "instructions": "You are a high volume, CV/Resume Parser with perfect accuracy. You are provided with a candidate's CV PDF file. You are to extract the only the certification information detailed below and prepare a JSON payload data. \n\nThe JSON object is to be in the following format with values (extracted text) associated to the following keys:\n\n\n{\n  \"certifications\": [\n    {\n        \"name\": \"\" (this is the name of the certificate),\n        \"institution\": \"\" (institution certificate was obtained from),\n        \"yearCompleted\": \"\"\n    },\n    ...\n  ]\n}\n\nDescription of keys are within brackets.\n\nExtract exactly as in the resume.\n\nDo not confuse certifications with degrees or diplomas. Degrees and Diplomas are not to be extracted.\n\nIf the candidate has no certifications then your output should be: {\"certifications\": []}\n\nHowever, if a value was not found for a key then that key's value is null. For example: \"score\": null\n\nYou are not allowed to ask follow up questions. Answer to the best of your abilities.\n\nOnce completed, make sure the JSON object is in a correct format. Then return only the JSON data. Do not return any extra text as the user will copy your full response.",
+          "tools": [
+            {
+              "type": "file_search"
+            }
+          ],
+          "tool_resources": {},
+          "metadata": {},
+          "temperature": 1.0,
+          "top_p": 1.0,
+          "max_completion_tokens": null,
+          "max_prompt_tokens": null,
+          "truncation_strategy": {
+            "type": "auto",
+            "last_messages": null
+          },
+          "incomplete_details": null,
+          "usage": {
+            "prompt_tokens": 2527,
+            "completion_tokens": 74,
+            "total_tokens": 2601
+          },
+          "response_format": "auto",
+          "tool_choice": "auto"
+        }
+  recorded_at: Wed, 15 May 2024 10:45:35 GMT
+recorded_with: VCR 6.1.0
