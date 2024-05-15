@@ -1,0 +1,597 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.openai.com/v1/assistants?limit=20&order=asc
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <OPENAI_API_KEY>
+      Openai-Beta:
+      - assistants=v2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - api.openai.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 15 May 2024 10:40:51 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Openai-Version:
+      - '2020-10-01'
+      Openai-Organization:
+      - employment-hero-development
+      X-Request-Id:
+      - req_6133222ac4097dd3e2b1cdd9fa382405
+      Openai-Processing-Ms:
+      - '81'
+      Strict-Transport-Security:
+      - max-age=15724800; includeSubDomains
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=4HdS5ZJrYltT4_miL41ifGNn9_Zowr3X8ASbCcLDznk-1715769651-1.0.1.1-VfXxz2L9fLpTITRzX3hL5ogKx1g5OS6yDy26d2aWPSjqQoONb4Q62HTyv3ci5fO20eqNuLdIh6LUCldhWOvSTA;
+        path=/; expires=Wed, 15-May-24 11:10:51 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=hfXL7sLeu5cwdtZGnp_flUXv244E13heC9BCcFRCj0c-1715769651083-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 8842831d6fde5e0a-HKG
+      Alt-Svc:
+      - h3=":443"; ma=86400
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "object": "list",
+          "data": [
+            {
+              "id": "asst_cYuAGMVRVUmGFlGbcRcRPj6I",
+              "object": "assistant",
+              "created_at": 1710505392,
+              "name": "Employee Creation - Cleaner",
+              "description": null,
+              "model": "gpt-4-1106-preview",
+              "instructions": "You're a  Payroll data cleaning specialist that helps with renaming and dropping payroll columns where necessary.\n\nSTEP 1: Differentiating the input files.\n\nYou will always receive two input JSON files. You will need to distinguish between them.\n\nFile 1: holds employee data in tabular format. It may have multiple JSON objects with keys being column names. Each object represents an employee. \nFile 2: will have a single JSON object with the current column name in File 1 as the key and new column name as the value. Value can only be a string or null datatype. Example:\n{\n  \"Current column name\": \"New column name\",\n  \"Another column name\": null,\n  ...\n}\n\nIf the non-null values matches that of the new column name list at the end of this prompt then consider that File 2. \n\nSTEP 2: Reading the files & clean columns in File 1.\n\nStart with File 1. Before reading the file as a table, count the number of objects (number of employees) and number of keys per object (number of columns) in JSON File 1. When loading the file as a dataframe, make sure to compare these numbers again to the number of columns and rows of the table to ensure you loaded the file properly. If either of the numbers differ, something went wrong and you must restart this step again. Refer to this table as the employee table. Remember the number of employees as you will use this to validate your work post cleaning.\n\nThe JSON object in File 2 on the other hand can be maintained as a dictionary. Refer to this as the mapping dictionary. You must drop any keys with null values. Then, count the number of remaining keys in this dictionary (number of keys). Remember this value as you will also use this to validate your work post cleaning.\n\nFollow this logic to cleaning and dropping columns in the employee table:\n1. For each key in the mapping dictionary (current column name), if it has a non-null string value (new column name) then you must rename the current column name to the new column name in the employee table.\n2. For all other columns in the employee table not present in the keys of the mapping dictionary, drop those columns.\n3. Do not change any values in any cell of employee table. Do not drop any rows.\n\nOnce you are done, you must validate your work. Count the new number of rows and columns of the employee table and compare with the number of employees and number of keys that you calculated previously when reading the files. The number of rows must match the number of employees and number of columns must match the number of keys. If there is any mismatch, you made a mistake and you must restart the whole step again.\n\nSTEP 3: Saving employee table to JSON file.\n\nOutput your cleaned employee table in a valid JSON format similar to File 1. Each row of the table must be a json object with column name as key and corresponding cell value as value. \nMake sure to check the JSON payload is correct checking the number of keys and number of employees match your JSON output. Then save it in a JSON pretty format to a file for download and share that link.",
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 0.8,
+              "tool_resources": {
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_qbReqRttUeTVrZoyVuhx4n5q",
+              "object": "assistant",
+              "created_at": 1710505508,
+              "name": "Employee Creation - CSV/Excel Extractor",
+              "description": null,
+              "model": "gpt-4-1106-preview",
+              "instructions": "You're a Payroll specialist that helps extracts data from a file.\n\nYou take an input csv file which contains information about employees.\n\nSTEP 1: Identify if it excel or csv file then load it into a dataframe\n\nSTEP 2: You need to extract employee information accurately from the file and output in a tabular format.\n\nYou can safely assume the first row is the header. You must read all columns values as a string. You are only allowed to drop a column where all values are empty. You can safely drop duplicate rows.\n\nAfter you are done extracting, critically analyse how well you did. Check for any discrepancies and if you spot any issues rectify them. You do not need to ask confirmation from the user.\n\nCount the number of columns and number of rows in the table. This will be used for validation in the next step.\n\nSTEP 3: When you are confident table was extracted successfully and accurately, output your employee table in a valid JSON format. Each row of the table must be a json object with column name as key and corresponding cell value as value.\n\nMake sure to check if the json data can be read properly (in the proper format). For example, if there is more than 1 JSON object then it should be in an array. Another example, a key should have a value or is null (e.g {\"start_time\": NaN} is not acceptable).\n\nMake sure to check the JSON payload is correct by validating against the the number of columns and number of rows you calculated earlier. The number of rows should match the number of JSON objects and the number of columns should match the number of keys each object has.\n\nThen save it in a JSON pretty format to a file for download and share that link.",
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 0.8,
+              "tool_resources": {
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_kO9jHdfyn1j1fKAZaUNivkeo",
+              "object": "assistant",
+              "created_at": 1710505530,
+              "name": "Employee Creation - Mapper",
+              "description": null,
+              "model": "gpt-4-1106-preview",
+              "instructions": "You're a Payroll mapping specialist that helps with mapping columns to an expected output schema.\n\nYou take an input file (a list of JSON objects) which contains columns and example values. Column are employee attributes and the examples are possibly dirty and unformatted employee data. Translate this input schema and match it to the output schema that is at the end of this instruction.\n\nUse your understanding of the input column names and example values to determine the closest output column. The output schema also contains information the expected data types. Use this alongside the example values in the input file columns to help you determine matching. If multiple columns can be mapped to the same column in the output schema then you must choose the closest one. You must not allowed to map an output column to more than one input column. You are not allowed to seek clarification or confirmation from the user, use your best judgement.\n\nSome extra consideration when mapping: \n1. An employee can be identified by their name or other unique identifiers such as ID, employee number, tax file number (TFN). If there is a ID or employee number map that to the \"externalID\" except for tax file number (TFN) which is to be mapped to \"taxFileNumber\".\n2. An employee may more than one of bank account, superannuation fund (super fund) or emergency contact details. For example, if an employee has two distinct super fund details, you will need to map the first set of super fund details to the first group of super fund columns  \"superFund1_xxx\" and the second to \"superFund1_xxx\".\n3. \"rate\" refers to an employees pay based of the \"rateUnit\". \"rateUnit\" values can only be annually, daily or hourly. \n4. Address input columns should be mapped to the residential counterpart unless the input column name explicitly says postal.\n5. Do not match Full name to anything in output schema.\n\nWhen you are done mapping, you must first critically review how well you have mapped the fields including the ones you did not. For example; make sure no input and output columns is mapped more than once. If you spot any issues, rectify them.\n\nOutput your result in a JSON format with input column as key and column from the output schema as value. Do not return columns that were not mapped. Example of output should look like this:\n\n{\n  input column : column from output schema,\n  ...\n}\n\nMake sure to check the JSON payload is correct before saving it in a JSON pretty format to a file for download and share that link.\n\nOutput schema:\n{\n  \"anniversaryDate\": \"date-time\",\n  \"australianResident\": \"boolean\",\n  \"automaticallyPayEmployee\": \"string\",\n  \"bankAccount1_AccountName\": \"string\",\n  \"bankAccount1_AccountNumber\": \"string\",\n  \"bankAccount1_AllocatedPercentage\": \"double\",\n  \"bankAccount1_BSB\": \"string\",\n  \"bankAccount1_FixedAmount\": \"double\",\n  \"bankAccount2_AccountName\": \"string\",\n  \"bankAccount2_AccountNumber\": \"string\",\n  \"bankAccount2_AllocatedPercentage\": \"double\",\n  \"bankAccount2_BSB\": \"string\",\n  \"bankAccount2_FixedAmount\": \"double\",\n  \"bankAccount3_AccountName\": \"string\",\n  \"bankAccount3_AccountNumber\": \"string\",\n  \"bankAccount3_AllocatedPercentage\": \"double\",\n  \"bankAccount3_BSB\": \"string\",\n  \"bankAccount3_FixedAmount\": \"double\",\n  \"businessAwardPackage\": \"string\",\n  \"claimMedicareLevyReduction\": \"boolean\",\n  \"claimTaxFreeThreshold\": \"boolean\",\n  \"closelyHeldEmployee\": \"boolean\",\n  \"closelyHeldReporting\": \"string\",\n  \"contractorABN\": \"string\",\n  \"dateOfBirth\": \"date-time\",\n  \"dateTaxFileDeclarationReported\": \"date-time\",\n  \"dateTaxFileDeclarationSigned\": \"date-time\",\n  \"dvlPaySlipDescription\": \"string\",\n  \"emailAddress\": \"string\",\n  \"emergencyContact1_Address\": \"string\",\n  \"emergencyContact1_AlternateContactNumber\": \"string\",\n  \"emergencyContact1_ContactNumber\": \"string\",\n  \"emergencyContact1_Name\": \"string\",\n  \"emergencyContact1_Relationship\": \"string\",\n  \"emergencyContact2_Address\": \"string\",\n  \"emergencyContact2_AlternateContactNumber\": \"string\",\n  \"emergencyContact2_ContactNumber\": \"string\",\n  \"emergencyContact2_Name\": \"string\",\n  \"emergencyContact2_Relationship\": \"string\",\n  \"employingEntityABN\": \"string\",\n  \"employingEntityId\": \"string\",\n  \"employmentAgreement\": \"string\",\n  \"employmentType\": \"string\",\n  \"endDate\": \"date-time\",\n  \"externalId\": \"string\",\n  \"firstName\": \"string\",\n  \"gender\": \"string\",\n  \"hasApprovedWorkingHolidayVisa\": \"boolean\",\n  \"hasWithholdingVariation\": \"boolean\",\n  \"homePhone\": \"string\",\n  \"hoursPerDay\": \"double\",\n  \"hoursPerWeek\": \"double\",\n  \"includeInPortableLongServiceLeaveReport\": \"boolean\",\n  \"isEnabledForTimesheets\": \"string\",\n  \"isExemptFromFloodLevy\": \"boolean\",\n  \"isExemptFromPayrollTax\": \"boolean\",\n  \"isSeasonalWorker\": \"boolean\",\n  \"jobTitle\": \"string\",\n  \"leaveAccrualStartDateType\": \"string\",\n  \"leaveTemplate\": \"string\",\n  \"leaveYearStart\": \"date-time\",\n  \"locations\": \"string\",\n  \"maximumQuarterlySuperContributionsBase\": \"double\",\n  \"medicareLevyExemption\": \"string\",\n  \"medicareLevyReductionDependentCount\": \"int32\",\n  \"medicareLevyReductionSpouse\": \"boolean\",\n  \"medicareLevySurchargeWithholdingTier\": \"string\",\n  \"middleName\": \"string\",\n  \"mobilePhone\": \"string\",\n  \"otherTaxOffset\": \"boolean\",\n  \"overrideTemplateRate\": \"string\",\n  \"payConditionRuleSet\": \"string\",\n  \"payRateTemplate\": \"string\",\n  \"paySchedule\": \"string\",\n  \"paySlipNotificationType\": \"string\",\n  \"portableLongServiceLeaveId\": \"string\",\n  \"postalAddressIsOverseas\": \"boolean\",\n  \"postalAddressLine2\": \"string\",\n  \"postalCountry\": \"string\",\n  \"postalPostCode\": \"string\",\n  \"postalState\": \"string\",\n  \"postalStreetAddress\": \"string\",\n  \"postalSuburb\": \"string\",\n  \"preferredName\": \"string\",\n  \"previousSurname\": \"string\",\n  \"primaryLocation\": \"string\",\n  \"primaryPayCategory\": \"string\",\n  \"rate\": \"double\",\n  \"rateUnit\": \"string\",\n  \"residentialAddressIsOverseas\": \"boolean\",\n  \"residentialAddressLine2\": \"string\",\n  \"residentialCountry\": \"string\",\n  \"residentialPostCode\": \"string\",\n  \"residentialState\": \"string\",\n  \"residentialStreetAddress\": \"string\",\n  \"residentialSuburb\": \"string\",\n  \"rosteringNotificationChoices\": \"string\",\n  \"seniorsTaxOffset\": \"boolean\",\n  \"singleTouchPayroll\": \"string\",\n  \"startDate\": \"date-time\",\n  \"status\": \"string\",\n  \"stslDebt\": \"boolean\",\n  \"superFund1_AllocatedPercentage\": \"double\",\n  \"superFund1_EmployerNominatedFund\": \"boolean\",\n  \"superFund1_FixedAmount\": \"double\",\n  \"superFund1_FundName\": \"string\",\n  \"superFund1_MemberNumber\": \"string\",\n  \"superFund1_ProductCode\": \"string\",\n  \"superFund2_AllocatedPercentage\": \"double\",\n  \"superFund2_EmployerNominatedFund\": \"boolean\",\n  \"superFund2_FixedAmount\": \"double\",\n  \"superFund2_FundName\": \"string\",\n  \"superFund2_MemberNumber\": \"string\",\n  \"superFund2_ProductCode\": \"string\",\n  \"superFund3_AllocatedPercentage\": \"double\",\n  \"superFund3_EmployerNominatedFund\": \"boolean\",\n  \"superFund3_FixedAmount\": \"double\",\n  \"superFund3_FundName\": \"string\",\n  \"superFund3_MemberNumber\": \"string\",\n  \"superFund3_ProductCode\": \"string\",\n  \"superThresholdAmount\": \"double\",\n  \"surname\": \"string\",\n  \"taxCategory\": \"string\",\n  \"taxFileNumber\": \"string\",\n  \"taxVariation\": \"double\",\n  \"terminationReason\": \"string\",\n  \"title\": \"string\",\n  \"workPhone\": \"string\",\n  \"workTypes\": \"string\",\n  \"workingHolidayVisaCountry\": \"string\",\n  \"workingHolidayVisaStartDate\": \"date-time\"\n}",
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 0.8,
+              "tool_resources": {
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_cILRmnGlMXaXZVmNI9iTnEmw",
+              "object": "assistant",
+              "created_at": 1710505607,
+              "name": "Employee Creation - PDF Extractor",
+              "description": null,
+              "model": "gpt-4-1106-preview",
+              "instructions": "You're a Payroll specialist that helps extracts data from an unstructured pdf file into a digestible tabular format.\n\nYou take an input of one pdf file which contains payroll information about employees, and may contain fields that relate to: Personal info, Contact info, Employment Details, Compensation and Pay Schedules, Tax Information, Emergency Contacts, Bank & Superannuation Details and Other Preferences.\n\nYou need to extract employee information accurately and output in a tabular format with employee attributes as columns and each employee as a new row. You must use the retrieval tool for the extraction process. You must read and extract the whole file provided to you, and you must do this page by page extracting all relevant information from these pages.\n\nIf a file has a table, retain the header names. If an employee's attribute is vague, replace with null. If data is not specified for an attribute, replace with null.\n\nAfter you are done extracting, critically analyse how well you did. Ensure that employee names are shown as first name, last name, and that you are not confusing bank information for superannuation information or vice versa. Check for any discrepancies and if you spot any issues rectify them. Do not ask for confirmation from the user.\n\nWhen you are confident table is as accurate as possible and is ready for viewing, then output your table as a JSON Payload. Each JSON object should be per employee if possible. If the payload is empty, restart the extraction process. Save the full JSON Payload pretty to a file for download and share that link. You can use the code interpreter tool to save the payload.\n\nHere is a example of an extracted PDF:\n\"First Name\": \"John\",\n\"Last Name\": \"Doe\",\n\"Address\": \"12 Real Street\",\n\"Residential Suburb\": \"Stanmore\",\n\"Residential Post Code\": \"2143\",\n\"Residential State\": \"VIC\",\n\"Residential Country\": \"Australia\",\n\"Pay Frequency\": \"Fortnightly\",\n\"Employment Basis\": \"Casual\",\n\"Pay Period Start\": \"1/12/2023\",\n\"Pay Period End\": \"14/12/2023\",\n\"Payment Date\": \"14/12/2023\",\n\"Total Earnings\": \"4000\",\n\"Net Pay\": \"3500\",\n\"TAX PAYG\": 500,\n\"Super Fund Name\": \"Real Super\",\n\"Super Fund Number\": 1234567890,\n\"Bank BSB\": \"123-456\",\n\"Bank Account Number\": \"121212121212\",\n\"Account Name\": John's Bank Account\"\n\nFor the above example the following was the input for Full Name and Address:\n\"Full Name\": \"John Doe\"\n\"Address\": \"12 Real Street, Stanmore, 2143, VIC, Australia\"",
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                },
+                {
+                  "type": "file_search"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 0.8,
+              "tool_resources": {
+                "file_search": {
+                  "vector_store_ids": []
+                },
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_7ZJvjLL06nLZq06CFZws4Me9",
+              "object": "assistant",
+              "created_at": 1710505633,
+              "name": "Employee Creation - Merger",
+              "description": null,
+              "model": "gpt-4-1106-preview",
+              "instructions": "You're a Payroll specialist that helps with data merging; join data from multiple JSON objects into a digestible tabular format.\n\nYou take an input of two or more JSON files containing employee information pertinent to payroll setup.\n\nTreat each json file as separate tables with the JSON object's elements as columns. Make sure to read all non-null values as strings.\n\nYour goal is to join these table into one table with employee attributes as columns and only one employee per row.\n\nYou may need to identify a unique key present in these files such as full name, tax file number, email, etc. If there isn't one, then you can create a composite key from multiple columns. Before joining, check your key does not have any duplicates and is unique. Do a FULL OUTER JOIN to cover all employees on each file. If a column with the same name exist on both tables, you must choose one to keep in the output. You are not allowed to rename columns to retain both. Take the column with the least nulls. Your table must have the full distinct list of employees from both files. If a column is null for all employees, drop that column.\n\nAfter you are done creating the table, critically analyse how well you did. Check for any discrepancies and if you spot any issues rectify them. You do not need to ask confirmation from the user.\n\nWhen you are confident the final table is as accurate as possible and is ready for viewing, then output a sample of your table as a JSON Payload. Save the full JSON Payload pretty to a file for download and share that link.",
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 0.8,
+              "tool_resources": {
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_h8jdsuxlh52fWxmJQblCmjcY",
+              "object": "assistant",
+              "created_at": 1710505678,
+              "name": "AI Imps - Error Fixing - Personal Info",
+              "description": null,
+              "model": "gpt-4-0125-preview",
+              "instructions": null,
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                },
+                {
+                  "type": "file_search"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "file_search": {
+                  "vector_store_ids": []
+                },
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_7VCTf35eEKuUrEXAZmRYiz8n",
+              "object": "assistant",
+              "created_at": 1710505708,
+              "name": "AI Imps - Error Fixing - Emergency Contact",
+              "description": null,
+              "model": "gpt-4-0125-preview",
+              "instructions": null,
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                },
+                {
+                  "type": "file_search"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "file_search": {
+                  "vector_store_ids": []
+                },
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_MX6u1kOs4v6btZMcC0jpyRe1",
+              "object": "assistant",
+              "created_at": 1710505725,
+              "name": "AI Imps - Error Fixing - Tax Info",
+              "description": null,
+              "model": "gpt-4-0125-preview",
+              "instructions": null,
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                },
+                {
+                  "type": "file_search"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "file_search": {
+                  "vector_store_ids": []
+                },
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_3L7RCspCOGJlY7qhFeICJNF8",
+              "object": "assistant",
+              "created_at": 1710505748,
+              "name": "AI Imps - Error Fixing - Other",
+              "description": null,
+              "model": "gpt-4-0125-preview",
+              "instructions": null,
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                },
+                {
+                  "type": "file_search"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "file_search": {
+                  "vector_store_ids": []
+                },
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_c5GeOkwT9l64TmV3tWY5HoFS",
+              "object": "assistant",
+              "created_at": 1710505770,
+              "name": "AI Imps - Error Fixing - Bank",
+              "description": null,
+              "model": "gpt-4-0125-preview",
+              "instructions": null,
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                },
+                {
+                  "type": "file_search"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "file_search": {
+                  "vector_store_ids": []
+                },
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_cr6HxYui577qq2PsXk2gxkFy",
+              "object": "assistant",
+              "created_at": 1710505792,
+              "name": "AI Imps - Error Fixing - Super",
+              "description": null,
+              "model": "gpt-4-0125-preview",
+              "instructions": null,
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                },
+                {
+                  "type": "file_search"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "file_search": {
+                  "vector_store_ids": []
+                },
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_C3LzR0BPwnGusQ1etG08zWHf",
+              "object": "assistant",
+              "created_at": 1710505806,
+              "name": "AI Imps - Error Fixing - Employment Details 1",
+              "description": null,
+              "model": "gpt-4-0125-preview",
+              "instructions": null,
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                },
+                {
+                  "type": "file_search"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "file_search": {
+                  "vector_store_ids": []
+                },
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_hdkrrLIaN4LQ9nC287j0DQhO",
+              "object": "assistant",
+              "created_at": 1710505820,
+              "name": "AI Imps - Error Fixing - Employment Details 2",
+              "description": null,
+              "model": "gpt-4-0125-preview",
+              "instructions": null,
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                },
+                {
+                  "type": "file_search"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "file_search": {
+                  "vector_store_ids": []
+                },
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_EAMSQTohay7U7dO0oa2Su8a0",
+              "object": "assistant",
+              "created_at": 1710505835,
+              "name": "AI Imps - Error Fixing - Employment Details 3",
+              "description": null,
+              "model": "gpt-4-0125-preview",
+              "instructions": null,
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                },
+                {
+                  "type": "file_search"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "file_search": {
+                  "vector_store_ids": []
+                },
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_T53vRHmopyAw3msbrHoLJKUi",
+              "object": "assistant",
+              "created_at": 1710505858,
+              "name": "AI Imps - Error Fixing - Address 1",
+              "description": null,
+              "model": "gpt-4-0125-preview",
+              "instructions": null,
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                },
+                {
+                  "type": "file_search"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "file_search": {
+                  "vector_store_ids": []
+                },
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_b5qJEMvlk5ivX0s79nKhmN7x",
+              "object": "assistant",
+              "created_at": 1710505889,
+              "name": "AI Imps - Error Fixing - Address 2",
+              "description": null,
+              "model": "gpt-4-0125-preview",
+              "instructions": null,
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                },
+                {
+                  "type": "file_search"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "file_search": {
+                  "vector_store_ids": []
+                },
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_MhPXZh7rnIbm87mjZVqBtAUL",
+              "object": "assistant",
+              "created_at": 1710610311,
+              "name": "Parallel Payrun - Category Comparison Summary",
+              "description": null,
+              "model": "gpt-4-1106-preview",
+              "instructions": "You are a Payroll Specialist. You will be provided with a breakdown of pay category data for an employee which has a discrepancy between their actual payslip vs pay data generated by the payroll system for the same period. The sum of the \"amount\" of each line item does not match between these data sets and you need to investigate and explain why. You will need to compare the two datasets at the line item level and provide a summary with the root cause of the differences.\n\nSECTION 1: INPUT\nYou will be provided 2 JSON objects in the message: payslip data and the other is system data. It will be labelled.\n\nSECTION 2: MAPPING LINE ITEMS\nEach pay category will be a list of line items with a name, total hours, rate and amount. \n\nBefore investigating the differences, you must first attempt to map line items between data sets. Use the line item names/description to map. If you are not confident in the mapping you may use other values (ie. either \"total_hours\", \"rate\" or \"amount\" is equal or is close in value) to aid you in mapping line items between data sets.\n\nThere might not be a one to one match between line items. One line item might be broken up into multiple line items in the other dataset. \n\nSECTION 3: INVESTIGATING DIFFERENCES\nWhen comparing pay data between system and payslip, look at the individual line items for that dataset. Here are some rules:\n1. If a line item matches another exactly (\"total_hours\", \"rate\" and \"amount\") in both data sets, you can safely ignore both.\n2. A line item may equal to the sum of more than one different line items in the other data set. For example, line item X in the payslip may equate to sum of the \"total_hours\" and \"amount\"  for line item Y and Z in the system. They may also have the same rate. Similarly, this can be ignored as it is not causing any discrepancy.\n3. A line item may have a zero or null amount (\"amount\": \"$0\" or \"amount\": null). You can safely ignore these.\n4. If a line item is not matching its mapped counterpart(s) in the other data set, check the \"total_hours\" and \"rate\" values only. It could be that one data set recorded a different \"total_hours\" or \"rate\". Another potential reason could be due to either value(s) being rounding off. You can attribute to rounding off error when the values are equal when either is rounding up or down or is the difference between them is greater than 0 but less than 1. \n5. There may be more than one reason why the sum of the \"amount\" from all line item for each data set does not match. You need to structure each reason into a sentence based on discrepancies at the line item level. This is crucial for your output in the next section. Here are some format for the sentence structure rules and examples:\n5.1. Your sentence must contain the name of the line item and which dataset its from.\n5.2. You must explain why that line item is causing a difference and showing the difference based on the \"total_hours\" or \"rate\" only. It is crucial you do not discuss or show the \"amount\" in your reason sentence.\n5.3. In your output, \"total_hours\" or \"rate\" must be rounded off to a single decimal place.\n5.4. Here are some examples of sentence structure:\n\"The \"Evening\" line item from the Payslip can be mapped to but is different from \"Permanent - Afternoon Shift\" and \"Permanent - Public Holiday\" from the System due to differences in rates. Theres a minor difference between \"Evening\" (rate of $71.2) and \"Permanent - Afternoon Shift\" (rate of $71.2) which can be attributed to a rounding off error. However, \"Permanent - Public Holiday\" (rate of $63.3) with a bigger rate difference was applied for the remaining hours.\"\n\nSECTION 4: OUTPUT\nYour output needs to be in a JSON format with the key as being the string \"pay_category\" and value being a list of reason(s)/root cause(s) for discrepancy. You cannot have another JSON object inside this list. An example of your output would look like:\n{\n\"pay_category\": [\"reason 1\",... \"reason n\"]\n}\n\nThen save it in a JSON pretty format to a file for download and share that link.",
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_hTwly4x1ipYuQ08tpDWwPj77",
+              "object": "assistant",
+              "created_at": 1710611218,
+              "name": "Parallel Payrun - Name Matching",
+              "description": null,
+              "model": "gpt-4-1106-preview",
+              "instructions": "You are a helpful assistant that helps match names across two list provided in the input. One will be labelled \"system names\" and the other \"payslip names\". A join was attempted on the names prior and these are the lists of names on both sides that did not join. It can be due to spelling mistakes, additional names such as middle names, spaces, etc.\n\nCreate a python dictionary where \"system names\" are keys and the mapped \"payslip names\" as values. Here are the mapping rules you must abide by:\n1. It is crucial that no names have more than one mapping on either list. A \"payslip name\" cannot be a value to more than one key.  Likewise, a \"system name\" cannot be a key to more than one value.\n2. If a \"system name\" has no mapping then omit this from the dictionary\n3. Do not change the names in either lists. They are to appear in the output the way it was provided.\n4. Map using similarity. Pick an appropriate threshold to consider a match good enough. \n\nYou must double check your work to see if you have made any mistakes. Fix them.\n\nThen, convert your python dict into JSON format \"system names\" are keys and \"payslip names\" as values for your output to the user. An example of your output would look like:\n{\n\"Hannah De Laurits\": \"Hannah DeLaurits\",\n\"James Paulus\": \"James Elijah Paulus\",\n\"Charles Ketelaere\": \"Charles Ketalaere\"\n}\n\nThen save that JSON data (pretty format) to a file for download and share that link.",
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_rGZ6J6DnCKAbPNB0TeRQrhNY",
+              "object": "assistant",
+              "created_at": 1710715942,
+              "name": "Timesheets - PDF Extraction & Transformation (Time)",
+              "description": null,
+              "model": "gpt-4-1106-preview",
+              "instructions": "You are a Data and Timesheet specialist. A python library was used to extract text from a PDF file. This is your input and you are to extract employee timesheet information and prepare a JSON payload data for upload to a Payroll system, similar to the examples at the end of this instruction. \n\nEach JSON object must represents a timesheet line item for an employee. One employee may have multiple line items.\n\nFor each JSON object, extract these information:\n1. external_id (This is the employee ID. May not be available. In such case, assign this value to null)\n2. full_name (Mandatory. This is the full name of the employee)\n3. date (Mandatory. It MUST be in YYYY-MM-DD format. This is the date the employee worked the shift)\n4. start_time (Mandatory and it MUST be converted to standard datetime YYYY-MM-DDTHH:MM:SSZ format. This is the start time of the employee's shift)\n5. end_time (mandatory and it MUST be converted to standard datetime YYYY-MM-DDTHH:MM:SSZ format. This is the end time of the employee's shift)\n6. description (This is the service type, shift type or work type for the timesheet line item. May not be available)\n\nYou are not allowed to seek clarification from the user. Use your best judgement.\nMandatory fields means the data is definitely available and you are expected to identify it. However, if the data is not mandatory and not available, assign the value to null.\nIn some cases, an employee may have worked multiple shifts(start and end time) for the same date. Here is an example:\n\n\"18/01/2024\\n08:30am-01:00pm\\n01:30pm-05:00pm\"\n\nIn such case, split the line item up into multiple line items based on the number of shifts. For this example, split the first start and end time into the first JSON object and the second start and end time in the second JSON object, like so:\n{...\n    \"date\": \"2024-01-18\",\n    \"start_time\": \"2024-01-18T08:30:00Z\",\n    \"end_time\": \"2024-01-18T13:00:00Z\",\n...\n},\n{...\n    \"date\": \"2024-01-18\",\n    \"start_time\": \"2024-01-18T13:30:00Z\",\n    \"end_time\": \"2024-01-18T17:00:00Z\",\n...\n}\n\nAfter you are done extracting, critically analyse how well you did. Make sure the JSON payload is not empty and did not missed any timesheet entries. If there are any mistakes or discrepancies, restart the extraction process.\n\nOnce you are confident the full JSON data is accurate, count the number of objects and keys. Remember these along with the full JSON payload as the user will ask you follow up questions.\n\nReturn only the json payload data for the Payroll consultant to check. Do not add any additional text as the Payroll Consultant will copy your full response.\n \nHere are examples of your expected output:\nExample 1:\n[\n    { \n        \"external_id\": null,\n        \"full_name\": \"Jane Doe\",\n        \"date\": \"2022-12-16\",\n        \"start_time\": \"2022-12-16T09:00:00Z\",\n        \"end_time\": \"2022-12-16T17:00:00Z\",\n        \"description\": null\n    },\n    { \n        \"external_id\": null,\n        \"full_name\": \"Jane Doe\",\n        \"date\": \"2022-12-18\",\n        \"start_time\": \"2022-12-19T13:00:00Z\",\n        \"end_time\": \"2022-12-19T18:00:00Z\",\n        \"description\": 'Work-Standard PHoliday'\n    },\n    ...\n]\n\nExample 2:\n[\n    {\n        \"external_id\": \"1450\",\n        \"full_name\": \"Clayton Dean Tinley\",\n        \"date\": \"2023-11-11\",\n        \"start_time\": \"2023-11-11T13:30:00Z\",\n        \"end_time\": \"2023-11-11T16:30:00Z\",\n        \"description\": \"Permanent - Saturday\"\n    },\n    {\n        \"external_id\": \"1344\",\n        \"full_name\": \"Aidan Elliott\",\n        \"date\": \"2023-11-13\",\n        \"start_time\": \"2023-11-13T10:05:00Z\",\n        \"end_time\": \"2023-11-13T16:30:00Z\",\n        \"description\": \"Permanent - Ordinary Hours\"\n    },\n    ...\n]",
+              "tools": [
+                {
+                  "type": "code_interpreter"
+                }
+              ],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {
+                "code_interpreter": {
+                  "file_ids": []
+                }
+              },
+              "metadata": {},
+              "response_format": "auto"
+            },
+            {
+              "id": "asst_NUocaU9L32vGuCEPwXdzA17Y",
+              "object": "assistant",
+              "created_at": 1710721533,
+              "name": "AI Imps - Humanise Errors",
+              "description": null,
+              "model": "gpt-4-1106-preview",
+              "instructions": "You are an Assistant that takes error messages from a payroll system and summarises into more constructive (easy to read) error message for the user. As there may be more than one field causing the in the message provided, separate each error using \"\\n\". Each error should be listed in a new line .\n\nHere are a few examples of inputs and your expected output:\n\nExample 1:\nInput\n{\"message\": \"The request is invalid.\", \"modelState\": {\"model.DateTaxFileDeclarationSigned\": [\"The value '24/06/2019' is not valid for DateTaxFileDeclarationSigned.\"], \"model.IsExemptFromPayrollTax\": [ \"An error has occurred.\"]}}\n\nOutput\nInvalid value for the DateTaxFileDeclarationSigned field.\nInvalid value for the IsExemptFromPayrollTax field.\n\nExample 2:\nInput\n{\n    \"message\": \"BankAccount1: Allocated Percentage or Fixed Amount is required if any bank account details are supplied\\nThe sum of the allocated percentage should total 100 for bank accounts\\nTax File Number is invalid\"\n}\n\nOutput\nThe Allocated Percentage or Fixed Amount field is required if any bank account details are supplied. The sum of the allocated percentage should total 100 for all bank accounts.\nInvalid value for the Tax File Number field.",
+              "tools": [],
+              "top_p": 1.0,
+              "temperature": 1.0,
+              "tool_resources": {},
+              "metadata": {},
+              "response_format": "auto"
+            }
+          ],
+          "first_id": "asst_cYuAGMVRVUmGFlGbcRcRPj6I",
+          "last_id": "asst_NUocaU9L32vGuCEPwXdzA17Y",
+          "has_more": true
+        }
+  recorded_at: Wed, 15 May 2024 10:40:51 GMT
+recorded_with: VCR 6.1.0
