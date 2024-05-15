@@ -1,22 +1,16 @@
 require "net/http"
 require 'uri'
 require 'json'
-require_relative 'exceptions/exception'
+require_relative '../exceptions/exception'
 
 module OpenAI
 
-  class RestBase
-
-    protected
+  class RestClient
 
     OPENAI_API_BASEURL = "https://api.openai.com/v1"
 
-    def default_headers
-      {
-        'Content-Type' => 'application/json',
-        'Authorization' => "Bearer #{@api_key}",
-        'OpenAI-Beta' => 'assistants=v2'
-      }
+    def initialize(api_key)
+      @api_key = api_key
     end
 
     def call_get(url_path, params = {}, headers = default_headers)
@@ -46,6 +40,15 @@ module OpenAI
       else
         raise OpenAPIException.new(JSON.parse(response.body)['error'])
       end
+    end
+
+    private
+    def default_headers
+      {
+        'Content-Type' => 'application/json',
+        'Authorization' => "Bearer #{@api_key}",
+        'OpenAI-Beta' => 'assistants=v2'
+      }
     end
   end
 
